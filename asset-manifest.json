@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/nareshkadhare/market-smith-helper/static/css/main.2f058981.css",
-    "main.js": "/nareshkadhare/market-smith-helper/static/js/main.2f64c8ba.js",
-    "static/js/787.8bf10b35.chunk.js": "/nareshkadhare/market-smith-helper/static/js/787.8bf10b35.chunk.js",
-    "index.html": "/nareshkadhare/market-smith-helper/index.html",
-    "main.2f058981.css.map": "/nareshkadhare/market-smith-helper/static/css/main.2f058981.css.map",
-    "main.2f64c8ba.js.map": "/nareshkadhare/market-smith-helper/static/js/main.2f64c8ba.js.map",
-    "787.8bf10b35.chunk.js.map": "/nareshkadhare/market-smith-helper/static/js/787.8bf10b35.chunk.js.map"
+    "main.css": "/market-smith-helper/static/css/main.2f058981.css",
+    "main.js": "/market-smith-helper/static/js/main.8c0b424d.js",
+    "static/js/787.8bf10b35.chunk.js": "/market-smith-helper/static/js/787.8bf10b35.chunk.js",
+    "index.html": "/market-smith-helper/index.html",
+    "main.2f058981.css.map": "/market-smith-helper/static/css/main.2f058981.css.map",
+    "main.8c0b424d.js.map": "/market-smith-helper/static/js/main.8c0b424d.js.map",
+    "787.8bf10b35.chunk.js.map": "/market-smith-helper/static/js/787.8bf10b35.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2f058981.css",
-    "static/js/main.2f64c8ba.js"
+    "static/js/main.8c0b424d.js"
   ]
 }
