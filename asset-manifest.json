@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/market-smith-helper/static/css/main.2f058981.css",
-    "main.js": "/market-smith-helper/static/js/main.d50ff72e.js",
+    "main.js": "/market-smith-helper/static/js/main.52b0b02a.js",
     "static/js/787.8bf10b35.chunk.js": "/market-smith-helper/static/js/787.8bf10b35.chunk.js",
     "index.html": "/market-smith-helper/index.html",
     "main.2f058981.css.map": "/market-smith-helper/static/css/main.2f058981.css.map",
-    "main.d50ff72e.js.map": "/market-smith-helper/static/js/main.d50ff72e.js.map",
+    "main.52b0b02a.js.map": "/market-smith-helper/static/js/main.52b0b02a.js.map",
     "787.8bf10b35.chunk.js.map": "/market-smith-helper/static/js/787.8bf10b35.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2f058981.css",
-    "static/js/main.d50ff72e.js"
+    "static/js/main.52b0b02a.js"
   ]
 }
