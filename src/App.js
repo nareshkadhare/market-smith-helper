@@ -1,24 +1,49 @@
-import logo from './logo.svg';
+import '@coreui/coreui/dist/css/coreui.min.css';
+import { CCard, CCardBody, CContainer, CNav, CNavItem, CNavLink, CTabContent, CTabPane } from '@coreui/react';
+import React, { useState } from "react";
 import './App.css';
+import Industries from './Industries';
+import Stocks from './Stocks';
 
 function App() {
+
+  const [activeKey, setActiveKey] = useState(1);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+    <CContainer className="App">
+      <header className="App-header mt-4">
+        <h1>Market Smith</h1>
       </header>
-    </div>
+
+      <CCard>
+        <CCardBody>
+          <CNav variant='tabs'>
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(1)} active={activeKey === 1}>
+                <strong>197 Industries</strong>
+              </CNavLink>
+            </CNavItem>
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(2)} active={activeKey === 2}>
+                <strong>Industry Stocks</strong>
+              </CNavLink>
+            </CNavItem>
+          </CNav>
+
+          <CTabContent>
+
+            <CTabPane role='tabpanel' visible={activeKey === 1}>
+              <Industries />
+            </CTabPane>
+
+            <CTabPane role='tabpanel' visible={activeKey === 2}>
+              <Stocks />
+            </CTabPane>
+          </CTabContent>
+        </CCardBody>
+      </CCard>
+    </CContainer>
   );
 }
 
