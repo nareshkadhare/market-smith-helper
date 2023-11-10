@@ -1,35 +1,49 @@
 import './App.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAlert, CButton, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CAlert, CButton, CCol, CForm, CFormInput, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import Papa from "papaparse";
 import React, { useState } from "react";
 import { CContainer } from '@coreui/react';
 import { cilCopy, cilExternalLink, cilReload } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CSVLink, CSVDownload } from "react-csv";
 
 function Stocks() {
 
   const allowedExtensions = ["csv"];
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState([]);
   const [copy, setCopy] = useState({
     value: '',
     copiedIndustry: "",
   });
   const [selectedCell, setSelectedCell] = useState("");
+  const [csvData, setCsvData] = useState("");
+  const [watchlistName, setWatchlistName] = useState("Strong-Sector-Week");
+
 
   const handleFileChange = (e) => {
     setError("");
+    const selectedFiles = e.target.files;
     if (e.target.files.length) {
-      const inputFile = e.target.files[0];
-      const fileExtension = inputFile?.type.split("/")[1];
-      if (!allowedExtensions.includes(fileExtension)) {
-        setError("Please input a csv file");
-        return;
+
+      //For every selected file check error and add to final file list
+      const files = new Array();
+
+      for (let index = 0; index < selectedFiles.length; index++) {
+        const file = selectedFiles[index];
+        const fileExtension = file?.type.split("/")[1];
+        if (!allowedExtensions.includes(fileExtension)) {
+          setError("Please input a csv file");
+          return;
+        }
+        files.push(file)
       }
-      setFile(inputFile);
+
+      //set file list
+      setFile(files);
     }
   };
 
@@ -37,18 +51,46 @@ function Stocks() {
 
     const BUYER_DEMAND = ["A+", "A", "A-", "B+"];
     if (!file) return setError("Enter a valid file");
-    const reader = new FileReader();
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true });
-      const parsedData = csv?.data;
-      console.log(parsedData)
 
-      const filteredData = parsedData.filter(data => data.Symbol && isNaN(data.Symbol)
+
+    const handleFileChosen = async (file) => {
+      return new Promise((resolve, reject) => {
+        let fileReader = new FileReader();
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+        fileReader.onerror = reject;
+        fileReader.readAsText(file);
+      });
+    }
+
+
+    const readAllFiles = async (AllFiles) => {
+      const allFileData = await Promise.all(AllFiles.map(async (file) => {
+        const fileContents = await handleFileChosen(file);
+        return fileContents;
+      }));
+
+      // console.log(allFileData);
+
+      let filesContentObj = [];
+
+
+      allFileData.forEach(data => {
+        const csv = Papa.parse(data, { header: true });
+        const parsedData = csv?.data;
+        filesContentObj = filesContentObj.concat(parsedData);
+      })
+
+      // console.log("Final Trades : ", filesContentObj)
+
+      const filteredData = filesContentObj.filter(data => data.Symbol && isNaN(data.Symbol)
         && data.MarketCapital.length >= 11
         && BUYER_DEMAND.includes(data.BuyerDemand)
         && data.Price.replaceAll(",", "") > 28
       );
-      console.log("filteredData : ", filteredData)
+
+      // console.log("filteredData : ", filteredData)
 
       const sortedData = [];
       BUYER_DEMAND.forEach(demand => {
@@ -60,8 +102,18 @@ function Stocks() {
       })
 
       setData(sortedData);
-    };
-    reader.readAsText(file);
+
+      const result = [];
+      sortedData.forEach(element => {
+        result.push("NSE:" + element.Symbol);
+      });
+
+      setCsvData(result.join(","))
+
+      return allFileData;
+    }
+
+    readAllFiles(file);
   };
 
 
@@ -74,6 +126,7 @@ function Stocks() {
             name="file"
             type="File"
             label={<b>Select Industry Stocks CSV file.</b>}
+            multiple
           />
         </div>
         <div>
@@ -82,6 +135,31 @@ function Stocks() {
             <CIcon icon={cilReload} className="text-secondary" size="sm" /> Reload
 
           </CButton>
+          {
+            csvData &&
+            <div style={{ float: 'right' }}>
+              <CRow >
+                <CCol xs lg={8}>
+                  <CForm>
+                    <CFormInput
+                      type="text"
+                      id="WatchlistNameFormControlInput"
+
+                      placeholder="Enter Watchlist"
+                      value={watchlistName}
+                      onChange={(e) => {
+                        setWatchlistName(e.target.value);
+                      }}
+                    />
+                  </CForm>
+                </CCol>
+                <CCol xs lg={4}>
+                  <CSVLink filename={watchlistName} className='btn btn-primary btn-sm' style={{ float: "right" }} data={csvData}>Download</CSVLink>
+                </CCol>
+              </CRow>
+            </div>
+
+          }
         </div>
       </CContainer>
 
