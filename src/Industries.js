@@ -61,7 +61,7 @@ function Industries() {
     reader.onload = async ({ target }) => {
       const csv = Papa.parse(target.result, { header: true });
       const parsedData = csv?.data;
-      console.log("parsedData", parsedData)
+      // console.log("parsedData", parsedData)
       const filteredData = parsedData.filter(data => data.NumberOfStocks > NUMBER_OF_STOCKS &&
         data.MarketCapital.length === 11 &&
         ((((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLast3MonthAgo) < CHANGE_PERCENT_IN_GROUP_RANK) ||
@@ -70,9 +70,7 @@ function Industries() {
         && (100 - ((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek)) >= 10
       ).sort(compare);
 
-      console.log("filteredData", filteredData)
-
-
+      // console.log("filteredData", filteredData)
       setData(filteredData);
     };
     reader.readAsText(file);

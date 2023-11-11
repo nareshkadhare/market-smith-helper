@@ -130,36 +130,39 @@ function Stocks() {
           />
         </div>
         <div>
-          <CButton onClick={handleParse} color="primary" size="sm"> Get Stocks</CButton>
-          <CButton onClick={() => window.location.reload()} color="primary" size="sm" style={{ marginLeft: 10 }}>
-            <CIcon icon={cilReload} className="text-secondary" size="sm" /> Reload
 
-          </CButton>
-          {
-            csvData &&
-            <div style={{ float: 'right' }}>
-              <CRow >
-                <CCol xs lg={8}>
-                  <CForm>
-                    <CFormInput
-                      type="text"
-                      id="WatchlistNameFormControlInput"
-
-                      placeholder="Enter Watchlist"
-                      value={watchlistName}
-                      onChange={(e) => {
-                        setWatchlistName(e.target.value);
-                      }}
-                    />
-                  </CForm>
-                </CCol>
-                <CCol xs lg={4}>
-                  <CSVLink filename={watchlistName} className='btn btn-primary btn-sm' style={{ float: "right" }} data={csvData}>Download</CSVLink>
-                </CCol>
-              </CRow>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div>
+              <CButton onClick={handleParse} color="primary" size="sm" style={{ fontWeight: "bold" }}> Get Stocks</CButton>
+              <CButton onClick={() => window.location.reload()} color="primary" size="sm" style={{ marginLeft: 10, fontWeight: "bold" }}>
+                <CIcon icon={cilReload} className="text-secondary" size="sm" /> Reload
+              </CButton>
             </div>
 
-          }
+            <div>
+              {
+                csvData &&
+
+                <CForm style={{ display: "flex" }}>
+                  <CFormInput
+                    type="text"
+                    id="WatchlistNameFormControlInput"
+
+                    placeholder="Enter Watchlist"
+                    value={watchlistName}
+                    onChange={(e) => {
+                      setWatchlistName(e.target.value);
+                    }}
+                    style={{ marginRight: 10, fontWeight: "bold" }}
+                  />
+                  <CSVLink filename={watchlistName} className='btn btn-primary btn-sm' style={{ fontWeight: "bold" }} data={csvData}>
+                    Download
+
+                  </CSVLink>
+                </CForm>
+              }
+            </div>
+          </div>
         </div>
       </CContainer>
 
