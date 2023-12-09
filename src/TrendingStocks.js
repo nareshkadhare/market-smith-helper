@@ -1,17 +1,14 @@
-import './App.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAlert, CButton, CCol, CForm, CFormInput, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
-import Papa from "papaparse";
-import React, { useState } from "react";
-import { CContainer } from '@coreui/react';
-import { cilCopy, cilExternalLink, cilReload } from '@coreui/icons';
+import { cilExternalLink, cilReload } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CAlert, CButton, CContainer, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import React, { useState } from "react";
+import { CSVLink } from "react-csv";
+import './App.css';
 
-function Stocks() {
+function TrendingStocks() {
 
-  const allowedExtensions = ["csv"];
+
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [file, setFile] = useState([]);
@@ -34,11 +31,6 @@ function Stocks() {
 
       for (let index = 0; index < selectedFiles.length; index++) {
         const file = selectedFiles[index];
-        const fileExtension = file?.type.split("/")[1];
-        if (!allowedExtensions.includes(fileExtension)) {
-          setError("Please input a csv file");
-          return;
-        }
         files.push(file)
       }
 
@@ -49,9 +41,7 @@ function Stocks() {
 
   const handleParse = () => {
 
-    const BUYER_DEMAND = ["A+", "A", "A-", "B+"];
     if (!file) return setError("Enter a valid file");
-
 
     const handleFileChosen = async (file) => {
       return new Promise((resolve, reject) => {
@@ -71,45 +61,29 @@ function Stocks() {
         return fileContents;
       }));
 
-      // console.log(allFileData);
 
-      let filesContentObj = [];
-
-
+      let filesContentObj = "";
       allFileData.forEach(data => {
-        const csv = Papa.parse(data, { header: true });
-        const parsedData = csv?.data;
-        filesContentObj = filesContentObj.concat(parsedData);
+        filesContentObj = filesContentObj += data;
       })
 
-      // console.log("Final Trades : ", filesContentObj)
 
-      const filteredData = filesContentObj.filter(data => data.Symbol && isNaN(data.Symbol)
-        && data.MarketCapital.length >= 11
-        && BUYER_DEMAND.includes(data.BuyerDemand)
-        && data.Price.replaceAll(",", "") > 28
-      );
-
-      // console.log("filteredData : ", filteredData)
-
-      const sortedData = [];
-      BUYER_DEMAND.forEach(demand => {
-        filteredData.forEach(data => {
-          if (demand === data.BuyerDemand) {
-            sortedData.push(data)
-          }
-        })
-      })
-
-      setData(sortedData);
-
-      const result = [];
-      sortedData.forEach(element => {
-        result.push("NSE:" + element.Symbol);
+      const symbolSet = new Set();
+      filesContentObj.split(",").forEach(symbol => {
+        symbolSet.add("NSE:" + symbol.split(":")[1]);
       });
 
-      setCsvData(result.join(","))
 
+      const tableData = [];
+      let finalfileData = "";
+
+      symbolSet.forEach(value => {
+        finalfileData += value + ","
+        tableData.push(value.split(":")[1]);
+      });
+
+      setCsvData(finalfileData);
+      setData(tableData);
       return allFileData;
     }
 
@@ -125,7 +99,7 @@ function Stocks() {
             id="csvInput"
             name="file"
             type="File"
-            label={<b>Select Industry Stocks CSV files.</b>}
+            label={<b>Select Stocks files</b>}
             multiple
           />
         </div>
@@ -181,42 +155,28 @@ function Stocks() {
               <CTableRow>
                 <CTableHeaderCell scope="col">Stock No</CTableHeaderCell>
                 <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Symbol</CTableHeaderCell>
-                <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Company Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Price</CTableHeaderCell>
-                <CTableHeaderCell scope="col">BuyerDemand</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Market Cap</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {data.map((row, idx) =>
+              {data.map((Symbol, idx) =>
+
                 <CTableRow key={idx}>
                   <CTableDataCell>{idx + 1}</CTableDataCell>
-                  <CTableDataCell onClick={() => setSelectedCell(row.Symbol)} style={{ textAlign: "left", backgroundColor: selectedCell === row.Symbol ? "#A7F1A8" : "" }} >
-                    <strong>{row.Symbol}</strong>
-                    {/* <CopyToClipboard text={row.Symbol} onCopy={() => setCopy({ copiedSymbol: row.Symbol })}>
-                      <CIcon style={{ marginLeft: 10 }} icon={cilCopy} className={copy.copiedSymbol === row.Symbol ? "text-primary" : "text-secondary"} size="xl" />
-                    </CopyToClipboard> */}
-                    <a style={{ marginLeft: 10 }} href={'https://in.tradingview.com/chart/ZLWT61X3/?symbol=NSE:' + row.Symbol}
+                  <CTableDataCell onClick={() => setSelectedCell(Symbol)} style={{ textAlign: "left", backgroundColor: selectedCell === Symbol ? "#A7F1A8" : "" }} >
+                    <strong>{Symbol}</strong>
+                    <a style={{ marginLeft: 10 }} href={'https://in.tradingview.com/chart/ZLWT61X3/?symbol=' + Symbol}
                       target="_blank"
                     >
                       <CIcon icon={cilExternalLink} className="text-primary" size="lg" />
                     </a>
                   </CTableDataCell>
-                  <CTableDataCell style={{ textAlign: "left" }}>{row.CompanyName}</CTableDataCell>
-                  <CTableDataCell>{row.Price}</CTableDataCell>
-                  <CTableDataCell><strong>{row.BuyerDemand}</strong></CTableDataCell>
-                  <CTableDataCell>{row.MarketCapital}</CTableDataCell>
-                  <CTableDataCell>
-
-                  </CTableDataCell>
-
                 </CTableRow>
               )}
 
               {
                 data && data.length === 0 && <CTableRow>
 
-                  <CTableDataCell colSpan={6}>No records available  </CTableDataCell>
+                  <CTableDataCell colSpan={2}>No records available  </CTableDataCell>
                 </CTableRow>
               }
             </CTableBody>
@@ -228,4 +188,4 @@ function Stocks() {
   );
 }
 
-export default Stocks;
+export default TrendingStocks;

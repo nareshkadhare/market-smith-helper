@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import './App.css';
 import Industries from './Industries';
 import Stocks from './Stocks';
+import TrendingStocks from './TrendingStocks';
 
 function App() {
 
@@ -29,6 +30,11 @@ function App() {
                 <strong>Industry Stocks</strong>
               </CNavLink>
             </CNavItem>
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(3)} active={activeKey === 3}>
+                <strong>Trending Stocks</strong>
+              </CNavLink>
+            </CNavItem>
           </CNav>
 
           <CTabContent>
@@ -39,6 +45,10 @@ function App() {
 
             <CTabPane role='tabpanel' visible={activeKey === 2}>
               <Stocks />
+            </CTabPane>
+
+            <CTabPane role='tabpanel' visible={activeKey === 3}>
+              <TrendingStocks />
             </CTabPane>
           </CTabContent>
         </CCardBody>
