@@ -1,13 +1,11 @@
-import './App.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAlert, CButton, CCol, CForm, CFormInput, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { cilExternalLink, cilReload } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { CAlert, CButton, CContainer, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import Papa from "papaparse";
 import React, { useState } from "react";
-import { CContainer } from '@coreui/react';
-import { cilCopy, cilExternalLink, cilReload } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
+import './App.css';
 
 function Stocks() {
 
@@ -57,7 +55,13 @@ function Stocks() {
       return new Promise((resolve, reject) => {
         let fileReader = new FileReader();
         fileReader.onload = () => {
-          resolve(fileReader.result);
+          const fileName = file.name.split(".")[0].replaceAll("_INIndustry_Stocks", "");
+          resolve(
+            {
+              fileName: fileName,
+              data: fileReader.result
+            }
+          );
         };
         fileReader.onerror = reject;
         fileReader.readAsText(file);
@@ -74,16 +78,20 @@ function Stocks() {
       // console.log(allFileData);
 
       let filesContentObj = [];
-
-
-      allFileData.forEach(data => {
-        const csv = Papa.parse(data, { header: true });
+      let fileWithItsContent = [];
+      allFileData.forEach(result => {
+        const csv = Papa.parse(result.data, { header: true });
         const parsedData = csv?.data;
+        fileWithItsContent = fileWithItsContent.concat({
+          name: result.fileName,
+          data: parsedData
+        });
         filesContentObj = filesContentObj.concat(parsedData);
       })
 
-      // console.log("Final Trades : ", filesContentObj)
+      console.log("fileWithItsContent :", fileWithItsContent);
 
+      // console.log("Final Trades : ", filesContentObj)
       const filteredData = filesContentObj.filter(data => data.Symbol && isNaN(data.Symbol)
         && data.MarketCapital.length >= 11
         && BUYER_DEMAND.includes(data.BuyerDemand)
@@ -103,7 +111,19 @@ function Stocks() {
 
       setData(sortedData);
 
+      //Preparing Watchlist with sub section
       const result = [];
+      fileWithItsContent.forEach(sector => {
+        result.push("###" + sector.name);
+
+        //sector wise grouping
+        sortedData.forEach(element => {
+          if (sector.data.includes(element)) {
+            result.push("NSE:" + element.Symbol);
+          }
+        });
+      })
+
       sortedData.forEach(element => {
         result.push("NSE:" + element.Symbol);
       });

@@ -1,12 +1,10 @@
-import './App.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAlert, CButton, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { cilExternalLink, cilReload } from '@coreui/icons';
+import CIcon from '@coreui/icons-react';
+import { CAlert, CButton, CContainer, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import Papa from "papaparse";
 import React, { useState } from "react";
-import { CContainer } from '@coreui/react';
-import { cilCopy, cilExternalLink, cilReload } from '@coreui/icons';
-import CIcon from '@coreui/icons-react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import './App.css';
 
 function Industries() {
 
