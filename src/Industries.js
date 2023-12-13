@@ -53,8 +53,9 @@ function Industries() {
     }
 
 
-    const CHANGE_PERCENT_IN_GROUP_RANK = 75;
+    const CHANGE_PERCENT_IN_GROUP_RANK = 90;
     const NUMBER_OF_STOCKS = 6;
+    const CAPITALIZATION_LENGTH = 11;
 
     if (!file) return setError("Enter a valid file");
     const reader = new FileReader();
@@ -62,12 +63,22 @@ function Industries() {
       const csv = Papa.parse(target.result, { header: true });
       const parsedData = csv?.data;
       // console.log("parsedData", parsedData)
-      const filteredData = parsedData.filter(data => data.NumberOfStocks > NUMBER_OF_STOCKS &&
-        data.MarketCapital.length === 11 &&
-        ((((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLast3MonthAgo) < CHANGE_PERCENT_IN_GROUP_RANK) ||
-          (((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek) < CHANGE_PERCENT_IN_GROUP_RANK)) &&
-        data.IndustryGroupRankLastWeek - data.IndustryGroupRankCurrent > 0
-        && (100 - ((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek)) >= 10
+
+      const filteredData = parsedData.filter(data =>
+        //industy has min 6 stocks
+        data.NumberOfStocks >= NUMBER_OF_STOCKS &&
+
+        //has 1 lakh CR capital
+        data.MarketCapital.length === CAPITALIZATION_LENGTH &&
+
+        (
+          // 3 Months Comparision 
+          (((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLast3MonthAgo) <= CHANGE_PERCENT_IN_GROUP_RANK
+            && data.IndustryGroupRankCurrent <= 45) ||
+
+          //Weekly Comparision
+          (((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek) <= CHANGE_PERCENT_IN_GROUP_RANK)
+        )
       ).sort(compare);
 
       // console.log("filteredData", filteredData)
