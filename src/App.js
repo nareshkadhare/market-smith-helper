@@ -12,7 +12,7 @@ function App() {
 
   return (
 
-    <CContainer className="App">
+    <div className="App">
       <header className="App-header mt-4">
         <h1>Market Smith</h1>
       </header>
@@ -53,7 +53,7 @@ function App() {
           </CTabContent>
         </CCardBody>
       </CCard>
-    </CContainer>
+    </div>
   );
 }
 

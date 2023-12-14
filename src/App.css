@@ -1,6 +1,7 @@
 .App {
   display: flex;
   flex-direction: column;
+  padding-inline: 10%;
 }
 
 .App-header {

@@ -67,7 +67,7 @@ function Industries() {
         data.NumberOfStocks >= NUMBER_OF_STOCKS &&
 
         //has 1 lakh CR capital
-        data.MarketCapital.length === CAPITALIZATION_LENGTH &&
+        data.MarketCapital.length >= CAPITALIZATION_LENGTH &&
 
         (
           // 3 Months Comparision 
@@ -88,7 +88,7 @@ function Industries() {
 
   return (
     <section>
-      <CContainer className='mt-4' >
+      <div className='mt-4'>
         <div className="mb-3">
           <CFormInput onChange={handleFileChange}
             id="csvInput"
@@ -105,74 +105,74 @@ function Industries() {
 
           </CButton>
         </div>
-      </CContainer>
+      </div>
 
       <div style={{ marginTop: "3rem" }}>
-        <CContainer>
 
-          {
-            error &&
-            <CAlert color="danger">
-              {error}
-            </CAlert>
-          }
 
-          <CTable style={{ textAlign: "center" }} striped>
-            <CTableHead>
-              <CTableRow>
-                <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
-                <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Group Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Number Of Stocks</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Current Rank</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Last Week Rank</CTableHeaderCell>
-                <CTableHeaderCell scope="col">3 Month Ago Rank</CTableHeaderCell>
-                <CTableHeaderCell scope="col">W Change % </CTableHeaderCell>
-                <CTableHeaderCell scope="col">3M Change % </CTableHeaderCell>
-                <CTableHeaderCell scope="col">Market Cap</CTableHeaderCell>
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {data.map((row, idx) =>
-                <CTableRow key={idx}>
-                  <CTableDataCell>{idx + 1}</CTableDataCell>
-                  <CTableDataCell
-                    onClick={() => setSelectedCell(row.IndustryGroupName)} style={{ textAlign: "left", backgroundColor: selectedCell === row.IndustryGroupName ? "#A7F1A8" : "" }}
-                  >
-                    <strong>{row.IndustryGroupName}</strong>
+        {
+          error &&
+          <CAlert color="danger">
+            {error}
+          </CAlert>
+        }
 
-                    {/* <CopyToClipboard text={row.IndustryGroupName} onCopy={() => setCopy({ copiedIndustry: row.IndustryGroupName })}>
+        <CTable style={{ textAlign: "center" }} striped>
+          <CTableHead>
+            <CTableRow>
+              <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
+              <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Group Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Number Of Stocks</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Current Rank</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Last Week Rank</CTableHeaderCell>
+              <CTableHeaderCell scope="col">3 Month Ago Rank</CTableHeaderCell>
+              <CTableHeaderCell scope="col">W Change % </CTableHeaderCell>
+              <CTableHeaderCell scope="col">3M Change % </CTableHeaderCell>
+              <CTableHeaderCell scope="col">Market Cap</CTableHeaderCell>
+            </CTableRow>
+          </CTableHead>
+          <CTableBody>
+            {data.map((row, idx) =>
+              <CTableRow key={idx}>
+                <CTableDataCell>{idx + 1}</CTableDataCell>
+                <CTableDataCell
+                  onClick={() => setSelectedCell(row.IndustryGroupName)} style={{ textAlign: "left", backgroundColor: selectedCell === row.IndustryGroupName ? "#A7F1A8" : "" }}
+                >
+                  <strong>{row.IndustryGroupName}</strong>
+
+                  {/* <CopyToClipboard text={row.IndustryGroupName} onCopy={() => setCopy({ copiedIndustry: row.IndustryGroupName })}>
                       <CIcon style={{ marginLeft: 10 }} icon={cilCopy} className={copy.copiedIndustry === row.IndustryGroupName ? "text-primary" : "text-secondary"} size="xl" />
                     </CopyToClipboard> */}
 
-                    <a style={{ marginLeft: 10 }} href={'https://marketsmithindia.com/mstool/eval/list/' + row.Symbol + '/evaluation.jsp'}
-                      target="_blank"
-                    >
-                      <CIcon icon={cilExternalLink} className="text-primary" size="lg" />
-                    </a>
+                  <a style={{ marginLeft: 10 }} href={'https://marketsmithindia.com/mstool/eval/list/' + row.Symbol + '/evaluation.jsp'}
+                    target="_blank"
+                  >
+                    <CIcon icon={cilExternalLink} className="text-primary" size="lg" />
+                  </a>
 
 
 
-                  </CTableDataCell>
-                  <CTableDataCell>{row.NumberOfStocks}</CTableDataCell>
-                  <CTableDataCell>{row.IndustryGroupRankCurrent}</CTableDataCell>
-                  <CTableDataCell>{row.IndustryGroupRankLastWeek}</CTableDataCell>
-                  <CTableDataCell>{row.IndustryGroupRankLast3MonthAgo}</CTableDataCell>
-                  <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLastWeek)).toFixed(2) + " %"}</CTableDataCell>
-                  <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLast3MonthAgo)).toFixed(2) + " %"}</CTableDataCell>
-                  <CTableDataCell>{row.MarketCapital}</CTableDataCell>
+                </CTableDataCell>
+                <CTableDataCell>{row.NumberOfStocks}</CTableDataCell>
+                <CTableDataCell>{row.IndustryGroupRankCurrent}</CTableDataCell>
+                <CTableDataCell>{row.IndustryGroupRankLastWeek}</CTableDataCell>
+                <CTableDataCell>{row.IndustryGroupRankLast3MonthAgo}</CTableDataCell>
+                <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLastWeek)).toFixed(2) + " %"}</CTableDataCell>
+                <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLast3MonthAgo)).toFixed(2) + " %"}</CTableDataCell>
+                <CTableDataCell>{row.MarketCapital}</CTableDataCell>
 
-                </CTableRow>
-              )}
+              </CTableRow>
+            )}
 
-              {
-                data && data.length === 0 && <CTableRow>
+            {
+              data && data.length === 0 && <CTableRow>
 
-                  <CTableDataCell colSpan={9}>No records available  </CTableDataCell>
-                </CTableRow>
-              }
-            </CTableBody>
-          </CTable>
-        </CContainer>
+                <CTableDataCell colSpan={9}>No records available  </CTableDataCell>
+              </CTableRow>
+            }
+          </CTableBody>
+        </CTable>
+
 
       </div>
     </section>

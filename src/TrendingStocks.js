@@ -1,7 +1,7 @@
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { cilExternalLink, cilReload } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CAlert, CButton, CContainer, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CAlert, CButton, div, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
 import './App.css';
@@ -93,7 +93,7 @@ function TrendingStocks() {
 
   return (
     <section>
-      <CContainer className='mt-4'>
+      <div className='mt-4'>
         <div className="mb-3">
           <CFormInput onChange={handleFileChange}
             id="csvInput"
@@ -138,10 +138,10 @@ function TrendingStocks() {
             </div>
           </div>
         </div>
-      </CContainer>
+      </div>
 
       <div style={{ marginTop: "2rem" }}>
-        <CContainer>
+        <div>
 
           {
             error &&
@@ -181,7 +181,7 @@ function TrendingStocks() {
               }
             </CTableBody>
           </CTable>
-        </CContainer>
+        </div>
 
       </div>
     </section >
