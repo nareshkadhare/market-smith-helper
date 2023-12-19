@@ -1,7 +1,7 @@
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { cilExternalLink, cilReload } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CAlert, CButton, CContainer, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CAlert, CButton, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import Papa from "papaparse";
 import React, { useState } from "react";
 import './App.css';
@@ -12,10 +12,6 @@ function Industries() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [file, setFile] = useState("");
-  const [copy, setCopy] = useState({
-    value: '',
-    copiedIndustry: "",
-  });
 
   const [selectedCell, setSelectedCell] = useState("");
 
@@ -108,15 +104,12 @@ function Industries() {
       </div>
 
       <div style={{ marginTop: "3rem" }}>
-
-
         {
           error &&
           <CAlert color="danger">
             {error}
           </CAlert>
         }
-
         <CTable style={{ textAlign: "center" }} striped>
           <CTableHead>
             <CTableRow>
@@ -139,19 +132,11 @@ function Industries() {
                   onClick={() => setSelectedCell(row.IndustryGroupName)} style={{ textAlign: "left", backgroundColor: selectedCell === row.IndustryGroupName ? "#A7F1A8" : "" }}
                 >
                   <strong>{row.IndustryGroupName}</strong>
-
-                  {/* <CopyToClipboard text={row.IndustryGroupName} onCopy={() => setCopy({ copiedIndustry: row.IndustryGroupName })}>
-                      <CIcon style={{ marginLeft: 10 }} icon={cilCopy} className={copy.copiedIndustry === row.IndustryGroupName ? "text-primary" : "text-secondary"} size="xl" />
-                    </CopyToClipboard> */}
-
                   <a style={{ marginLeft: 10 }} href={'https://marketsmithindia.com/mstool/eval/list/' + row.Symbol + '/evaluation.jsp'}
                     target="_blank"
                   >
                     <CIcon icon={cilExternalLink} className="text-primary" size="lg" />
                   </a>
-
-
-
                 </CTableDataCell>
                 <CTableDataCell>{row.NumberOfStocks}</CTableDataCell>
                 <CTableDataCell>{row.IndustryGroupRankCurrent}</CTableDataCell>

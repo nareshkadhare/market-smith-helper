@@ -6,6 +6,7 @@ import Papa from "papaparse";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
 import './App.css';
+import _ from "lodash";
 
 function Stocks() {
 
@@ -94,6 +95,7 @@ function Stocks() {
       // console.log("Final Trades : ", filesContentObj)
       const filteredData = filesContentObj.filter(data => data.Symbol && isNaN(data.Symbol)
         && data.MarketCapital.length >= 11
+        && data.PriceStrength >= 70
         && BUYER_DEMAND.includes(data.BuyerDemand)
         && data.Price.replaceAll(",", "") >= 28
       );
@@ -109,7 +111,8 @@ function Stocks() {
         })
       })
 
-      setData(sortedData);
+      setData(_.orderBy(sortedData, ['PriceStrength', 'BuyerDemand'],
+        ['desc', 'asc']));
 
       //Preparing Watchlist with sub section
       const result = [];
@@ -204,6 +207,7 @@ function Stocks() {
                 <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Company Name</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Price</CTableHeaderCell>
                 <CTableHeaderCell scope="col">BuyerDemand</CTableHeaderCell>
+                <CTableHeaderCell scope="col">RS</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Market Cap</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
@@ -225,6 +229,7 @@ function Stocks() {
                   <CTableDataCell style={{ textAlign: "left" }}>{row.CompanyName}</CTableDataCell>
                   <CTableDataCell>{row.Price}</CTableDataCell>
                   <CTableDataCell><strong>{row.BuyerDemand}</strong></CTableDataCell>
+                  <CTableDataCell>{row.PriceStrength}</CTableDataCell>
                   <CTableDataCell>{row.MarketCapital}</CTableDataCell>
                   <CTableDataCell>
 
@@ -236,7 +241,7 @@ function Stocks() {
               {
                 data && data.length === 0 && <CTableRow>
 
-                  <CTableDataCell colSpan={6}>No records available  </CTableDataCell>
+                  <CTableDataCell colSpan={7}>No records available  </CTableDataCell>
                 </CTableRow>
               }
             </CTableBody>
