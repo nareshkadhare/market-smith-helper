@@ -5,6 +5,7 @@ import './App.css';
 import Industries from './Industries';
 import Stocks from './Stocks';
 import TrendingStocks from './TrendingStocks';
+import GrowthStocks from './growthStocks';
 
 function App() {
 
@@ -32,7 +33,12 @@ function App() {
             </CNavItem>
             <CNavItem>
               <CNavLink href='#' onClick={() => setActiveKey(3)} active={activeKey === 3}>
-                <strong>Trending Stocks</strong>
+                <strong>Merge Watchlist</strong>
+              </CNavLink>
+            </CNavItem>
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(4)} active={activeKey === 4}>
+                <strong>Growth Stocks</strong>
               </CNavLink>
             </CNavItem>
           </CNav>
@@ -49,6 +55,10 @@ function App() {
 
             <CTabPane role='tabpanel' visible={activeKey === 3}>
               <TrendingStocks />
+            </CTabPane>
+
+            <CTabPane role='tabpanel' visible={activeKey === 4}>
+              <GrowthStocks />
             </CTabPane>
           </CTabContent>
         </CCardBody>
