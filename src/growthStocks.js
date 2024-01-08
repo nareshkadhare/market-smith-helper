@@ -52,7 +52,7 @@ function GrowthStocks() {
       console.log("parsedData", parsedData)
 
       const filteredData = parsedData.filter(data =>
-        //industy has min 6 stocks
+        data.Symbol && isNaN(data.Symbol) &&
         data.EPS_Rating >= 80 &&
         data.Master_Score >= 60 &&
         data.RS_Rating >= 80 &&

@@ -95,7 +95,7 @@ function Stocks() {
       // console.log("Final Trades : ", filesContentObj)
       const filteredData = filesContentObj.filter(data => data.Symbol && isNaN(data.Symbol)
         && data.MarketCapital.length >= 11
-        && data.PriceStrength >= 70
+        && data.PriceStrength >= 60
         && BUYER_DEMAND.includes(data.BuyerDemand)
         && data.Price.replaceAll(",", "") >= 28
       );
