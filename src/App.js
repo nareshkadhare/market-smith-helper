@@ -6,6 +6,7 @@ import Industries from './Industries';
 import Stocks from './Stocks';
 import TrendingStocks from './TrendingStocks';
 import GrowthStocks from './growthStocks';
+import NearWeeklyStocks from './NearWeeklyStocks';
 
 function App() {
 
@@ -41,6 +42,12 @@ function App() {
                 <strong>Growth Stocks</strong>
               </CNavLink>
             </CNavItem>
+
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(5)} active={activeKey === 5}>
+                <strong>Weekly Near MA Stocks</strong>
+              </CNavLink>
+            </CNavItem>
           </CNav>
 
           <CTabContent>
@@ -59,6 +66,10 @@ function App() {
 
             <CTabPane role='tabpanel' visible={activeKey === 4}>
               <GrowthStocks />
+            </CTabPane>
+
+            <CTabPane role='tabpanel' visible={activeKey === 5}>
+              <NearWeeklyStocks />
             </CTabPane>
           </CTabContent>
         </CCardBody>
