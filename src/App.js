@@ -1,12 +1,12 @@
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CCard, CCardBody, CContainer, CNav, CNavItem, CNavLink, CTabContent, CTabPane } from '@coreui/react';
+import { CCard, CCardBody, CNav, CNavItem, CNavLink, CTabContent, CTabPane } from '@coreui/react';
 import React, { useState } from "react";
 import './App.css';
 import Industries from './Industries';
+import NearPivotPointStocks from './NearPivotPointStocks';
 import Stocks from './Stocks';
 import TrendingStocks from './TrendingStocks';
 import GrowthStocks from './growthStocks';
-import NearWeeklyStocks from './NearWeeklyStocks';
 
 function App() {
 
@@ -45,7 +45,7 @@ function App() {
 
             <CNavItem>
               <CNavLink href='#' onClick={() => setActiveKey(5)} active={activeKey === 5}>
-                <strong>Weekly Near MA Stocks</strong>
+                <strong>Weekly Near Pivot Point Stocks</strong>
               </CNavLink>
             </CNavItem>
           </CNav>
@@ -69,7 +69,7 @@ function App() {
             </CTabPane>
 
             <CTabPane role='tabpanel' visible={activeKey === 5}>
-              <NearWeeklyStocks />
+              <NearPivotPointStocks />
             </CTabPane>
           </CTabContent>
         </CCardBody>

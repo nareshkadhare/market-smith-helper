@@ -34,8 +34,8 @@ function Industries() {
 
     function compare(a, b) {
 
-      const bValue = (100 - ((a.IndustryGroupRankCurrent * 100) / a.IndustryGroupRankLastWeek));
-      const aValue = (100 - ((b.IndustryGroupRankCurrent * 100) / b.IndustryGroupRankLastWeek));
+      const bValue = a.weeklyChange;
+      const aValue = b.weeklyChange;
 
       if (aValue < bValue) {
         return -1;
@@ -46,10 +46,8 @@ function Industries() {
       return 0;
     }
 
-
-    const CHANGE_PERCENT_IN_GROUP_RANK = 90;
     const NUMBER_OF_STOCKS = 6;
-    const CAPITALIZATION_LENGTH = 11;
+    const CAPITALIZATION = 10000;
 
     if (!file) return setError("Enter a valid file");
     const reader = new FileReader();
@@ -58,20 +56,30 @@ function Industries() {
       const parsedData = csv?.data;
       // console.log("parsedData", parsedData)
 
-      const filteredData = parsedData.filter(data =>
+
+      const industriesData = parsedData.map(data => {
+        return {
+          ...data,
+          ...{
+            weeklyChange: 100 - ((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek),
+            threeMonthChange: 100 - ((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLast3MonthAgo),
+            MarketCap: parseInt(data.MarketCapital && data.MarketCapital.replace("Cr", "").replaceAll(",", "").trim())
+          }
+        }
+      });
+
+      console.log(industriesData)
+
+      const filteredData = industriesData.filter(data =>
         //industy has min 6 stocks
         data.NumberOfStocks >= NUMBER_OF_STOCKS &&
 
         //has 1 lakh CR capital
-        data.MarketCapital.length >= CAPITALIZATION_LENGTH &&
+        data.MarketCap >= CAPITALIZATION &&
 
         (
-          // 3 Months Comparision 
-          (((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLast3MonthAgo) <= CHANGE_PERCENT_IN_GROUP_RANK
-            && data.IndustryGroupRankCurrent <= 45) ||
-
-          //Weekly Comparision
-          (((data.IndustryGroupRankCurrent * 100) / data.IndustryGroupRankLastWeek) <= CHANGE_PERCENT_IN_GROUP_RANK)
+          (data.IndustryGroupRankCurrent <= 40) ||
+          (data.weeklyChange >= 5 && data.IndustryGroupRankCurrent <= 90)
         )
       ).sort(compare);
 
@@ -142,8 +150,8 @@ function Industries() {
                 <CTableDataCell>{row.IndustryGroupRankCurrent}</CTableDataCell>
                 <CTableDataCell>{row.IndustryGroupRankLastWeek}</CTableDataCell>
                 <CTableDataCell>{row.IndustryGroupRankLast3MonthAgo}</CTableDataCell>
-                <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLastWeek)).toFixed(2) + " %"}</CTableDataCell>
-                <CTableDataCell>{(100 - ((row.IndustryGroupRankCurrent * 100) / row.IndustryGroupRankLast3MonthAgo)).toFixed(2) + " %"}</CTableDataCell>
+                <CTableDataCell>{row.weeklyChange.toFixed(2) + " %"}</CTableDataCell>
+                <CTableDataCell>{row.threeMonthChange.toFixed(2) + " %"}</CTableDataCell>
                 <CTableDataCell>{row.MarketCapital}</CTableDataCell>
 
               </CTableRow>

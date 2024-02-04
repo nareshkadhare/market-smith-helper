@@ -1,27 +1,24 @@
 import '@coreui/coreui/dist/css/coreui.min.css';
 import { cilExternalLink, cilReload } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CAlert, CButton, div, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CAlert, CButton, CForm, CFormInput, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
 import Papa from "papaparse";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
 import './App.css';
-import _ from "lodash";
 
-function NearWeeklyStocks() {
+function NearPivotPointStocks() {
 
   const allowedExtensions = ["csv"];
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [file, setFile] = useState([]);
-  const [copy, setCopy] = useState({
-    value: '',
-    copiedIndustry: "",
-  });
+
   const [selectedCell, setSelectedCell] = useState("");
   const [csvData, setCsvData] = useState("");
-  const [watchlistName, setWatchlistName] = useState("Weekly Near Setup");
+  const [watchlistName, setWatchlistName] = useState("Near-Pivot-Point");
 
+  const BUYER_DEMAND = ["A+", "A", "A-", "B+"];
 
   const handleFileChange = (e) => {
     setError("");
@@ -79,7 +76,7 @@ function NearWeeklyStocks() {
       let fileWithItsContent = [];
 
       allFileData.forEach(result => {
-        const csv = Papa.parse(result.data, { header: false });
+        const csv = Papa.parse(result.data, { header: true });
         const parsedData = csv?.data;
         fileWithItsContent = fileWithItsContent.concat({
           name: result.fileName,
@@ -91,23 +88,21 @@ function NearWeeklyStocks() {
       console.log("fileWithItsContent :", filesContentObj);
 
       // console.log("Final Trades : ", filesContentObj)
-      const filteredData = filesContentObj.filter(data => data[0] && isNaN(data[0]) && data[0] !== "Symbol");
+      const filteredData = filesContentObj.filter(data => data && isNaN(data.Symbol)
 
-      console.log("filteredData : ", filteredData);
+        && data.Master_Score >= 60
+        && BUYER_DEMAND.includes(data.AD_Rating)
+        && parseFloat(data.Price_Percentage_chg) <= 2.00 && parseFloat(data.Price_Percentage_chg) >= -2.00
+        && data.EPS_Rating >= 40
+      );
 
-      const result = [];
-      const greedData = [];
+      const csvData = [];
       filteredData.forEach(element => {
-        result.push("NSE:" + element[0]);
-        greedData.push({
-          Symbol: element[0],
-          CompanyName: element[1],
-          Price: element[2],
-        })
+        csvData.push("NSE:" + element.Symbol);
       });
 
-      setCsvData(result.join(","))
-      setData(greedData);
+      setCsvData(csvData.join(","))
+      setData(filteredData);
       return allFileData;
     }
 
@@ -123,7 +118,7 @@ function NearWeeklyStocks() {
             id="csvInput"
             name="file"
             type="File"
-            label={<b>Select Weekly Near Stocks CSV files.</b>}
+            label={<b>Select Near Pivot Point Stocks CSV files.</b>}
             multiple
           />
         </div>
@@ -177,32 +172,39 @@ function NearWeeklyStocks() {
           <CTable style={{ textAlign: "center" }} striped>
             <CTableHead>
               <CTableRow>
-                <CTableHeaderCell scope="col">Stock No</CTableHeaderCell>
-                <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Symbol</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Sr No</CTableHeaderCell>
                 <CTableHeaderCell style={{ textAlign: "left" }} scope="col">Company Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Symbol</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Curent Price</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Master_Score</CTableHeaderCell>
+                <CTableHeaderCell scope="col">EPS Rating</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Group Rank</CTableHeaderCell>
+                <CTableHeaderCell scope="col">RS Rating</CTableHeaderCell>
+
+                <CTableHeaderCell scope="col">AD Rating</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
               {data.map((row, idx) =>
                 <CTableRow key={idx}>
                   <CTableDataCell>{idx + 1}</CTableDataCell>
-                  <CTableDataCell onClick={() => setSelectedCell(row.Symbol)} style={{ textAlign: "left", backgroundColor: selectedCell === row.Symbol ? "#A7F1A8" : "" }} >
-                    <strong>{row.Symbol}</strong>
-                    {/* <CopyToClipboard text={row.Symbol} onCopy={() => setCopy({ copiedSymbol: row.Symbol })}>
-                      <CIcon style={{ marginLeft: 10 }} icon={cilCopy} className={copy.copiedSymbol === row.Symbol ? "text-primary" : "text-secondary"} size="xl" />
-                    </CopyToClipboard> */}
-                    <a style={{ marginLeft: 10 }} href={'https://in.tradingview.com/chart/ZLWT61X3/?symbol=NSE:' + row.Symbol}
+                  <CTableDataCell style={{ textAlign: "left" }}>{row.CompanyName}</CTableDataCell>
+                  <CTableDataCell
+                    onClick={() => setSelectedCell(row.Symbol)} style={{ backgroundColor: selectedCell === row.Symbol ? "#A7F1A8" : "" }}
+                  >
+                    <strong>{row.Symbol}  </strong>
+                    <a href={'https://marketsmithindia.com/mstool/eval/list/' + row.Symbol + '/evaluation.jsp'}
                       target="_blank"
                     >
-                      <CIcon icon={cilExternalLink} className="text-primary" size="lg" />
+                      <CIcon icon={cilExternalLink} className="text-primary" size="md" />
                     </a>
                   </CTableDataCell>
-                  <CTableDataCell style={{ textAlign: "left" }}>{row.CompanyName}</CTableDataCell>
-                  <CTableDataCell>{row.Price}</CTableDataCell>
-                  <CTableDataCell>
-
-                  </CTableDataCell>
+                  <CTableDataCell>{row.Cur_Price}</CTableDataCell>
+                  <CTableDataCell>{row.Master_Score}</CTableDataCell>
+                  <CTableDataCell>{row.EPS_Rating}</CTableDataCell>
+                  <CTableDataCell>{row.Group_Rank}</CTableDataCell>
+                  <CTableDataCell>{row.RS_Rating}</CTableDataCell>
+                  <CTableDataCell>{row.AD_Rating}</CTableDataCell>
 
                 </CTableRow>
               )}
@@ -210,7 +212,7 @@ function NearWeeklyStocks() {
               {
                 data && data.length === 0 && <CTableRow>
 
-                  <CTableDataCell colSpan={4}>No records available  </CTableDataCell>
+                  <CTableDataCell colSpan={9}>No records available  </CTableDataCell>
                 </CTableRow>
               }
             </CTableBody>
@@ -222,4 +224,4 @@ function NearWeeklyStocks() {
   );
 }
 
-export default NearWeeklyStocks;
+export default NearPivotPointStocks;
