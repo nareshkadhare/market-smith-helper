@@ -78,7 +78,7 @@ function Industries() {
         data.MarketCap >= CAPITALIZATION &&
 
         (
-          (data.IndustryGroupRankCurrent <= 40) ||
+          (data.IndustryGroupRankCurrent <= 40 && data.weeklyChange >= -10) ||
           (data.weeklyChange >= 5 && data.IndustryGroupRankCurrent <= 90)
         )
       ).sort(compare);
