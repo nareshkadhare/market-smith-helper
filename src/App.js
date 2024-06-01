@@ -7,6 +7,7 @@ import NearPivotPointStocks from './NearPivotPointStocks';
 import Stocks from './Stocks';
 import TrendingStocks from './TrendingStocks';
 import GrowthStocks from './growthStocks';
+import PriceBand from './PriceBand';
 
 function App() {
 
@@ -48,6 +49,12 @@ function App() {
                 <strong>Weekly Near Pivot Point Stocks</strong>
               </CNavLink>
             </CNavItem>
+
+            <CNavItem>
+              <CNavLink href='#' onClick={() => setActiveKey(6)} active={activeKey === 6}>
+                <strong>Price Band</strong>
+              </CNavLink>
+            </CNavItem>
           </CNav>
 
           <CTabContent>
@@ -70,6 +77,10 @@ function App() {
 
             <CTabPane role='tabpanel' visible={activeKey === 5}>
               <NearPivotPointStocks />
+            </CTabPane>
+
+            <CTabPane role='tabpanel' visible={activeKey === 6}>
+              <PriceBand />
             </CTabPane>
           </CTabContent>
         </CCardBody>
