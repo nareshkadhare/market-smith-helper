@@ -39,7 +39,7 @@ function PriceBand() {
         
         const csvData = [];
         filteredData.forEach(element => {
-            csvData.push("NSE:" + element.Symbol);
+            csvData.push("NSE:" + element.Symbol.replaceAll("&","_").replaceAll("-","_"));
         });
         
         const csvFileDataPrepared = [];
@@ -131,8 +131,8 @@ function PriceBand() {
 
       const csvData = [];
       filteredData.forEach(element => {
-        csvData.push("NSE:" + element.Symbol);
-      });
+        csvData.push("NSE:" + element.Symbol.replaceAll("&","_").replaceAll("-","_"));
+    });
       
       setCsvData(csvData.join(","))
       setData(filteredData);
